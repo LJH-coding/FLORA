@@ -1,0 +1,218 @@
+default:
+  model_size: "S"
+
+  # Training
+  batch_size: 16
+  L: 64 # batch length
+  H: 15 # imagination horizon
+
+  # Eval
+  eval_episodes: 5
+  final_eval_episodes: 100
+
+  # Optimizer
+  opt_weight_decay: 0.0
+  model_lr: 1.0e-4
+  critic_lr: 3.0e-5
+  actor_lr: 3.0e-5
+  model_eps: 1.0e-8
+  critic_eps: 1.0e-5
+  actor_eps: 1.0e-5
+  model_grad_max_norm: 1000
+  critic_grad_max_norm: 100
+  actor_grad_max_norm: 100
+  precision: "float32"
+  grad_init_scale: 32.0 # original 32.0
+
+  # learning Rate Scheduler for World Model
+  use_cosine_annealing: false
+  cosine_T_max: 100000
+  cosine_eta_min: 1.0e-5 # Min learning rate
+
+  # Replay Buffer
+  buffer_capacity: 1000000  # int(1e6)
+  pre_fill_steps: 100
+  load_replay_buffer_state_dict: true
+
+  # Return Norm
+  return_norm_decay: 0.99
+  return_norm_limit: 1.0
+  return_norm_perc_low: 0.05
+  return_norm_perc_high: 0.95
+
+  # World Model
+  norm:
+    class: "LayerNorm"
+    params:
+      eps: 1.0e-3
+      convert_float32: true
+  free_nats: 1.0
+  image_channels: 3
+  learn_initial: true
+
+  # Actor
+  actor_grad: "reinforce"
+  eta_entropy: 0.0003
+  sampling_tmp: 1.0
+
+  # Critic
+  lambda_td: 0.95
+  gamma: 0.997
+  target_value_reg: true
+  critic_ema_decay: 0.02
+  critic_slow_reg_scale: 1.0
+
+  # Loss Scales
+  loss_reward_scale: 1.0
+  loss_discount_scale: 1.0
+  loss_kl_prior_scale: 0.5
+  loss_kl_post_scale: 0.1
+  loss_contrastive_scale: 1.0
+  loss_recon_scale: 1.0
+
+  # TSSM
+  att_context_left: 8  # C must be <= L
+  module_pre_norm: false
+  detach_decoder: false
+
+  # Contrastive
+  contrastive_steps: 10
+  contrastive_exp_lambda: 0.75
+  contrastive_layers: 2
+
+  # Semantic Latent
+  barlow_twins:
+    enable: true
+    lambd: 5e-4
+    bt: 0.05 # weight
+
+  # Denoising-based Latent Predictor
+  loss_diffusion_scale: 0.5
+  use_diffusion: true
+
+  # SAM Optimizer
+  use_sam: false
+  sam:
+    rho: 0.05
+    use_adaptive: false
+
+  # Sample Pre Fill Steps
+  random_pre_fill_steps: true
+
+  # Log Figure
+  log_figure_batch: 16
+  log_figure_context_frames: 5
+
+  # Record Video
+  record_path: null
+
+  train_env_params: {}
+  eval_env_params: {}
+
+dmc:
+  env_params:
+    history_frames: 1
+    img_size: [64, 64]
+    action_repeat: 2
+
+  image_size: [64, 64]
+  time_limit: 1000
+  time_limit_eval: 1000
+  num_envs: 4
+  epochs: 1000
+  epoch_length: 250
+  env_step_period: 512
+  policy_discrete: false
+  final_eval_episodes: 10
+  precision: "float16"
+
+atari100k:
+  env_params:
+    history_frames: 1
+    img_size: [64, 64]
+    action_repeat: 4
+    grayscale_obs: False
+    noop_max: 30
+    repeat_action_probability: 0.0
+    full_action_space: False
+  image_size: [64, 64]
+  time_limit: 108000
+  time_limit_eval: 108000
+  num_envs: 1
+  epochs: 1000
+  epoch_length: 100
+  env_step_period: 1024
+  policy_discrete: true
+  train_env_params:
+    terminal_on_life_loss: true
+    clip_reward: false
+  eval_env_params:
+    terminal_on_life_loss: false
+    clip_reward: false
+
+diambra:
+  env_params:
+    history_frames: 1
+    img_size: [64, 64]
+    action_repeat: 1
+    grayscale_obs: false
+    increase_performance: true
+    record: true
+    diambra_settings: 
+      role: "P1"
+      step_ratio: 6
+      difficulty: 4
+      continue_game: 0.0
+      show_final: false # True when recording
+      outfits: 4
+      splash_screen: false
+      characters: "Kasumi"
+    diambra_wrappers:
+      stack_actions: 1
+      no_op_max: 0
+      no_attack_buttons_combinations: false
+      add_last_action: true
+      scale: false
+      exclude_image_scaling: false
+      process_discrete_binary: false
+      role_relative: true
+  image_size: [64, 64]
+  time_limit: 108000
+  time_limit_eval: 108000
+  num_envs: 1
+  epochs: 1000
+  epoch_length: 1000
+  env_step_period: 512
+  contrastive_steps: 5
+  policy_discrete: true
+
+crafter:
+  env_params:
+    size: 64
+    reward: true
+    max_episode_steps: 10000
+    action_repeat: 1
+  image_size: [64, 64]
+  time_limit: 108000
+  time_limit_eval: 108000
+  num_envs: 1
+  epochs: 1000
+  epoch_length: 500
+  env_step_period: 512
+  policy_discrete: true
+  train_env_params:
+    ignore_health_reward: true
+  eval_env_params:
+    ignore_health_reward: false
+
+dmcgb2:
+  image_size: [64, 64]
+  time_limit: 1000
+  time_limit_eval: 1000
+  num_envs: 4
+  epochs: 1000
+  epoch_length: 250
+  env_step_period: 512
+  policy_discrete: false
+  final_eval_episodes: 10
+  precision: "float16"

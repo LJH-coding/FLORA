@@ -1,0 +1,18 @@
+# Model Size
+S: # 40 M (total 50M)
+  hidden_size: 512
+  num_layers: 2
+  
+  # ConvNet
+  dim_cnn: 32
+  stoch_size: 32
+  discrete: 32
+
+  # Transformer
+  num_blocks_trans: 4
+  ff_ratio_trans: 2
+  num_heads_trans: 8
+  drop_rate_trans: 0.1
+  
+  # Harmonizer
+  harmony: false

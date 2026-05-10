@@ -1,0 +1,22 @@
+gymnasium[atari,accept-rom-license]==0.29.1
+
+# DMC
+dm_control==1.0.31
+
+# Other
+tqdm
+wandb
+av
+tensorboard
+ruamel.yaml==0.17.4
+einops
+timm
+datasets
+clean-fid
+opencv-python
+
+# DMCGB2
+xmltodict
+
+# Crafter
+crafter==1.8.3
